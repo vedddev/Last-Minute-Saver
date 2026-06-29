@@ -417,13 +417,7 @@ export default function Analytics() {
   useEffect(() => { fetchData(); }, [fetchData]);
 
   // ── Resolve analytics fields ──
-    const analysis = data?.analysis || {};
-
-    const score =
-    analysis.overall_productivity_score ??
-    data?.productivity_score ??
-    data?.score ??
-    null;
+  const score         = data?.productivity_score ?? data?.score ?? data?.productivity ?? null;
   const scoreDelta    = data?.score_delta ?? data?.productivity_delta ?? null;
   const streak        = data?.streak ?? data?.streak_days ?? null;
   const completionPct = data?.completion_rate ?? data?.completion_percentage ?? data?.task_completion_rate ?? null;
@@ -432,11 +426,7 @@ export default function Analytics() {
   const totalTasks    = data?.total_tasks ?? data?.tasks_total ?? null;
   const completedTasks= data?.completed_tasks ?? data?.tasks_completed ?? null;
   const productiveDay = data?.most_productive_day ?? data?.best_day ?? data?.productive_day ?? null;
-  const insights =
-    analysis.high_risk_tasks ??
-    data?.insights ??
-    data?.recommendations ??
-    [];
+  const insights      = data?.insights ?? data?.ai_insights ?? data?.recommendations ?? data;
 
   const weeklyData  = data?.weekly  ?? data?.weekly_productivity  ?? data?.weekly_chart  ?? data?.weekly_data  ?? [];
   const monthlyData = data?.monthly ?? data?.monthly_productivity ?? data?.monthly_chart ?? data?.monthly_data ?? [];

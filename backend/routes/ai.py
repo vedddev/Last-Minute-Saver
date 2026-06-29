@@ -15,18 +15,13 @@ ai_bp = Blueprint("ai", __name__)
 def planner():
 
     data = request.get_json()
-
     prompt = data.get("prompt")
-
     user_id = get_jwt_identity()
-
     response, status = AIService.create_plan(
         user_id,
         prompt
     )
-
     return jsonify(response), status
-
 @ai_bp.route("/schedule", methods=["POST"])
 @jwt_required()
 def schedule():
