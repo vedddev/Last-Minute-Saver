@@ -1,16 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import api from "../services/api";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  RiDashboardLine,
   RiTaskLine,
   RiCalendarLine,
   RiRobot2Line,
   RiBarChartLine,
-  RiSettingsLine,
-  RiLogoutBoxLine,
-  RiBrainLine,
   RiFlashlightLine,
   RiCheckboxCircleLine,
   RiTimeLine,
@@ -21,16 +16,11 @@ import {
   RiArrowDownLine,
   RiFireLine,
   RiFocusLine,
-  RiMenuLine,
-  RiCloseLine,
-  RiUserLine,
-  RiBellLine,
-  RiSearchLine,
   RiStarLine,
   RiPulseLine,
 } from "react-icons/ri";
-// import Sidebar from "../components/Sidebar";
-// import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 // import DashboardCards from "../components/DashboardCards";
 // import CoachCard from "../components/CoachCard";
 // import ChatWidget from "../components/ChatWidget";
@@ -40,320 +30,6 @@ import {
 
 
 import aiService from "../services/aiService";
-
-
-// ─── Sidebar ─────────────────────────────────────────────────────────────────
-const navItems = [
-  {
-    icon: RiDashboardLine,
-    label: "Dashboard",
-    path: "/dashboard",
-  },
-  {
-    icon: RiTaskLine,
-    label: "Tasks",
-    path: "/tasks",
-  },
-  {
-    icon: RiCalendarLine,
-    label: "Schedule",
-    path: "/schedule",
-  },
-  {
-    icon: RiRobot2Line,
-    label: "AI Coach",
-    path: "/coach",
-  },
-  {
-    icon: RiBarChartLine,
-    label: "Analytics",
-    path: "/analytics",
-  },
-  {
-    icon: RiSettingsLine,
-    label: "Settings",
-    path: "/settings",
-  },
-];
-function Sidebar({ collapsed, onToggle }) {
-  return (
-    <motion.aside
-      animate={{ width: collapsed ? 72 : 240 }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
-      style={{
-        position: "fixed",
-        left: 0,
-        top: 0,
-        height: "100vh",
-        background: "rgba(10,10,20,0.85)",
-        backdropFilter: "blur(20px)",
-        borderRight: "1px solid rgba(255,255,255,0.06)",
-        display: "flex",
-        flexDirection: "column",
-        zIndex: 100,
-        overflow: "hidden",
-      }}
-    >
-      {/* Logo */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          padding: "24px 20px 20px",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
-          minHeight: 72,
-        }}
-      >
-        <div
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: 10,
-            background: "linear-gradient(135deg,#7c3aed,#3b82f6)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-          }}
-        >
-          <RiBrainLine size={18} color="#fff" />
-        </div>
-        <AnimatePresence>
-          {!collapsed && (
-            <motion.span
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -8 }}
-              transition={{ duration: 0.2 }}
-              style={{
-                fontSize: 18,
-                fontWeight: 700,
-                background: "linear-gradient(90deg,#a78bfa,#60a5fa)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Athena AI
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Nav */}
-      <nav style={{ flex: 1, padding: "16px 12px", display: "flex", flexDirection: "column", gap: 4 }}>
-        {navItems.map(({ icon: Icon, label, active }) => (
-          <motion.button
-            key={label}
-            whileHover={{ backgroundColor: "rgba(124,58,237,0.15)" }}
-            whileTap={{ scale: 0.97 }}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              padding: "10px 12px",
-              borderRadius: 10,
-              border: "none",
-              cursor: "pointer",
-              background: active ? "rgba(124,58,237,0.2)" : "transparent",
-              color: active ? "#a78bfa" : "rgba(255,255,255,0.45)",
-              textAlign: "left",
-              width: "100%",
-              transition: "color 0.2s",
-              position: "relative",
-            }}
-          >
-            {active && (
-              <motion.div
-                layoutId="activeNav"
-                style={{
-                  position: "absolute",
-                  left: 0,
-                  top: 0,
-                  bottom: 0,
-                  width: 3,
-                  borderRadius: "0 2px 2px 0",
-                  background: "linear-gradient(180deg,#7c3aed,#3b82f6)",
-                }}
-              />
-            )}
-            <Icon size={20} style={{ flexShrink: 0 }} />
-            <AnimatePresence>
-              {!collapsed && (
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  style={{ fontSize: 14, fontWeight: active ? 600 : 400, whiteSpace: "nowrap" }}
-                >
-                  {label}
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.button>
-        ))}
-      </nav>
-
-      {/* Bottom */}
-      <div style={{ padding: "12px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-        <motion.button
-          whileHover={{ backgroundColor: "rgba(239,68,68,0.12)" }}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-            padding: "10px 12px",
-            borderRadius: 10,
-            border: "none",
-            cursor: "pointer",
-            background: "transparent",
-            color: "rgba(255,255,255,0.35)",
-            width: "100%",
-          }}
-        >
-          <RiLogoutBoxLine size={20} style={{ flexShrink: 0 }} />
-          <AnimatePresence>
-            {!collapsed && (
-              <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ fontSize: 14 }}>
-                Logout
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </motion.button>
-      </div>
-
-      {/* Toggle */}
-      <motion.button
-        onClick={onToggle}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        style={{
-          position: "absolute",
-          top: 22,
-          right: -14,
-          width: 28,
-          height: 28,
-          borderRadius: "50%",
-          background: "rgba(124,58,237,0.3)",
-          border: "1px solid rgba(124,58,237,0.5)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-          color: "#a78bfa",
-          zIndex: 10,
-        }}
-      >
-        {collapsed ? <RiMenuLine size={13} /> : <RiCloseLine size={13} />}
-      </motion.button>
-    </motion.aside>
-  );
-}
-
-// ─── Navbar ──────────────────────────────────────────────────────────────────
-function Navbar({ sidebarWidth }) {
-  return (
-    <motion.header
-      animate={{ left: sidebarWidth }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
-      style={{
-        position: "fixed",
-        top: 0,
-        right: 0,
-        height: 64,
-        background: "rgba(8,8,18,0.8)",
-        backdropFilter: "blur(20px)",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "0 28px",
-        zIndex: 90,
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            background: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: 10,
-            padding: "7px 14px",
-            color: "rgba(255,255,255,0.3)",
-            fontSize: 13,
-          }}
-        >
-          <RiSearchLine size={15} />
-          <span>Search anything...</span>
-          <span style={{ marginLeft: 16, fontSize: 11, color: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 4, padding: "1px 5px" }}>⌘K</span>
-        </div>
-      </div>
-
-      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-        <motion.button
-          whileHover={{ backgroundColor: "rgba(255,255,255,0.08)" }}
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 10,
-            border: "1px solid rgba(255,255,255,0.08)",
-            background: "rgba(255,255,255,0.04)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            color: "rgba(255,255,255,0.5)",
-            position: "relative",
-          }}
-        >
-          <RiBellLine size={18} />
-          <span
-            style={{
-              position: "absolute",
-              top: 7,
-              right: 7,
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              background: "#7c3aed",
-            }}
-          />
-        </motion.button>
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: 10,
-            padding: "6px 12px",
-            cursor: "pointer",
-          }}
-        >
-          <div
-            style={{
-              width: 26,
-              height: 26,
-              borderRadius: "50%",
-              background: "linear-gradient(135deg,#7c3aed,#3b82f6)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <RiUserLine size={14} color="#fff" />
-          </div>
-          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", fontWeight: 500 }}>You</span>
-        </div>
-      </div>
-    </motion.header>
-  );
-}
 
 // ─── Spinner ─────────────────────────────────────────────────────────────────
 function Spinner() {
@@ -857,8 +533,7 @@ function TodaysFocus({ dashboard }) {
 
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 export default function Dashboard() {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const sidebarWidth = sidebarCollapsed ? 72 : 240;
+  const [sidebarWidth, setSidebarWidth] = useState(240);
 
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState([]);
@@ -913,17 +588,14 @@ export default function Dashboard() {
   const scheduleData = dashboard?.schedule ?? dashboard?.timeline ?? [];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#080812", color: "#fff", fontFamily: "'Inter', system-ui, sans-serif" }}>
-      <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((c) => !c)} />
-      <Navbar sidebarWidth={sidebarWidth} />
+    <div style={{ minHeight: "100vh", background: "#080812", color: "#fff", fontFamily: "'Inter', system-ui, sans-serif", display: "flex" }}>
+      <Sidebar onWidthChange={setSidebarWidth} />
 
-      {/* Main */}
-      <motion.main
-        animate={{ marginLeft: sidebarWidth }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        style={{ paddingTop: 64, minHeight: "100vh" }}
-      >
-        <div style={{ padding: "32px 28px", maxWidth: 1400 }}>
+      <div style={{ flex: 1, marginLeft: sidebarWidth, transition: "margin-left 0.28s ease", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+        <Navbar sidebarWidth={sidebarWidth} />
+
+        <main style={{ flex: 1, padding: "88px 28px 40px" }}>
+        <div style={{ maxWidth: 1400 }}>
           {/* Page header */}
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: 28 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
@@ -1002,7 +674,8 @@ export default function Dashboard() {
             </>
           )}
         </div>
-      </motion.main>
+        </main>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+
 import { motion, AnimatePresence } from "framer-motion";
 import {
   RiDashboardLine,
@@ -14,6 +15,8 @@ import {
   RiMenuUnfoldLine,
   RiSparklingLine,
 } from "react-icons/ri";
+
+const MotionLink = motion.create(Link);
 
 // ─── Nav Config ───────────────────────────────────────────────────────────────
 const NAV_ITEMS = [
@@ -75,13 +78,16 @@ function Tooltip({ label, visible }) {
 }
 
 // ─── Nav Item ─────────────────────────────────────────────────────────────────
-function NavItem({ icon: Icon, label, path, active, collapsed, onClick }) {
+function NavItem({ icon: Icon, label, path, collapsed }) {
+  const location = useLocation();
+  const active =
+    location.pathname === path || location.pathname.startsWith(`${path}/`);
   const [hovered, setHovered] = useState(false);
 
   return (
     <div style={{ position: "relative" }}>
-      <motion.button
-        onClick={onClick}
+      <MotionLink
+        to={path}
         onHoverStart={() => setHovered(true)}
         onHoverEnd={() => setHovered(false)}
         whileTap={{ scale: 0.96 }}
@@ -95,6 +101,7 @@ function NavItem({ icon: Icon, label, path, active, collapsed, onClick }) {
           borderRadius: 11,
           border: "none",
           cursor: "pointer",
+          textDecoration: "none",
           background: active
             ? "linear-gradient(135deg,rgba(124,58,237,0.25),rgba(59,130,246,0.15))"
             : hovered
@@ -164,7 +171,7 @@ function NavItem({ icon: Icon, label, path, active, collapsed, onClick }) {
             </motion.span>
           )}
         </AnimatePresence>
-      </motion.button>
+      </MotionLink>
 
       {/* Tooltip — only when collapsed */}
       {collapsed && <Tooltip label={label} visible={hovered} />}
@@ -175,7 +182,8 @@ function NavItem({ icon: Icon, label, path, active, collapsed, onClick }) {
 // ─── Logo ─────────────────────────────────────────────────────────────────────
 function Logo({ collapsed }) {
   return (
-    <div
+    <Link
+      to="/dashboard"
       style={{
         display: "flex",
         alignItems: "center",
@@ -184,6 +192,7 @@ function Logo({ collapsed }) {
         justifyContent: collapsed ? "center" : "flex-start",
         borderBottom: "1px solid rgba(255,255,255,0.06)",
         minHeight: 72,
+        textDecoration: "none",
       }}
     >
       <motion.div
@@ -245,14 +254,13 @@ function Logo({ collapsed }) {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </Link>
   );
 }
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 export default function Sidebar({ onWidthChange }) {
-  const navigate  = useNavigate();
-  const location  = useLocation();
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
 
   const width = collapsed ? 72 : 240;
@@ -320,9 +328,7 @@ export default function Sidebar({ onWidthChange }) {
             icon={icon}
             label={label}
             path={path}
-            active={location.pathname === path || location.pathname.startsWith(path + "/")}
             collapsed={collapsed}
-            onClick={() => navigate(path)}
           />
         ))}
       </nav>
