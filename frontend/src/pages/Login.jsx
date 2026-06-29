@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import {
-  RiMailLine, RiLockLine, RiSparklingFill,
-  RiEyeLine, RiEyeOffLine, RiArrowRightLine
-} from 'react-icons/ri';
+import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
 import { useAuth } from '../context/AuthContext';
+import AuthLayout from '../components/AuthLayout';
 import styles from './Auth.module.css';
 
 export default function Login() {
@@ -16,6 +14,8 @@ export default function Login() {
   const [error, setError]       = useState('');
   const { login }               = useAuth();
   const navigate                = useNavigate();
+  const location                = useLocation();
+  const registered              = location.state?.registered;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,93 +33,81 @@ export default function Login() {
   };
 
   return (
-    <div className={styles.page}>
-      <div className={styles.orb1} />
-      <div className={styles.orb2} />
-      <div className={styles.orb3} />
+    <AuthLayout backTo="/">
+      <h1 className={styles.heading}>Log in</h1>
+      <p className={styles.switchText}>
+        Don&apos;t have an account?{' '}
+        <Link to="/register" className={styles.link}>Create an account</Link>
+      </p>
 
-      <motion.div
-        className={styles.card}
-        initial={{ opacity: 0, y: 32, scale: 0.97 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-      >
-        <div className={styles.cardHeader}>
-          <div className={styles.logoMark}>
-            <RiSparklingFill size={20} />
-          </div>
-          <h1 className={styles.brand}>Athena AI</h1>
-          <h2 className={styles.heading}>Welcome back</h2>
-          <p className={styles.subheading}>Sign in to your workspace</p>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        {registered && (
+          <motion.div
+            className={styles.successBanner}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+          >
+            Account created! Please sign in.
+          </motion.div>
+        )}
+
+        {error && (
+          <motion.div
+            className={styles.errorBanner}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+          >
+            {error}
+          </motion.div>
+        )}
+
+        <div className={styles.field}>
+          <input
+            type="email"
+            className={styles.input}
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+          />
         </div>
 
-        <form onSubmit={handleSubmit} className={styles.form}>
-          {error && (
-            <motion.div
-              className={styles.errorBanner}
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+        <div className={styles.field}>
+          <div className={styles.inputWrap}>
+            <input
+              type={showPw ? 'text' : 'password'}
+              className={`${styles.input} ${styles.inputWithIcon}`}
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+            />
+            <button
+              type="button"
+              className={styles.eyeBtn}
+              onClick={() => setShowPw((s) => !s)}
+              aria-label={showPw ? 'Hide password' : 'Show password'}
             >
-              {error}
-            </motion.div>
-          )}
-
-          <div className={styles.field}>
-            <label className={styles.label}>Email</label>
-            <div className={styles.inputWrap}>
-              <RiMailLine className={styles.inputIcon} size={16} />
-              <input
-                type="email"
-                className={styles.input}
-                placeholder="you@example.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                autoComplete="email"
-              />
-            </div>
+              {showPw ? <RiEyeOffLine size={17} /> : <RiEyeLine size={17} />}
+            </button>
           </div>
+        </div>
 
-          <div className={styles.field}>
-            <label className={styles.label}>Password</label>
-            <div className={styles.inputWrap}>
-              <RiLockLine className={styles.inputIcon} size={16} />
-              <input
-                type={showPw ? 'text' : 'password'}
-                className={styles.input}
-                placeholder="••••••••"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                autoComplete="current-password"
-              />
-              <button
-                type="button"
-                className={styles.eyeBtn}
-                onClick={() => setShowPw(s => !s)}
-              >
-                {showPw ? <RiEyeOffLine size={15} /> : <RiEyeLine size={15} />}
-              </button>
-            </div>
-          </div>
+        <div className={styles.forgotRow}>
+          <a href="#" className={styles.forgotLink} onClick={(e) => e.preventDefault()}>
+            Forgot password?
+          </a>
+        </div>
 
-          <motion.button
-            type="submit"
-            className={styles.submitBtn}
-            disabled={loading}
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
-          >
-            {loading
-              ? <span className={styles.spinner} />
-              : <> Sign in <RiArrowRightLine size={16} /> </>
-            }
-          </motion.button>
-        </form>
-
-        <p className={styles.footer}>
-          Don't have an account?{' '}
-          <Link to="/register" className={styles.link}>Create one free</Link>
-        </p>
-      </motion.div>
-    </div>
+        <motion.button
+          type="submit"
+          className={styles.submitBtn}
+          disabled={loading}
+          whileTap={{ scale: 0.98 }}
+        >
+          {loading ? <span className={styles.spinner} /> : 'Log in'}
+        </motion.button>
+      </form>
+    </AuthLayout>
   );
 }
