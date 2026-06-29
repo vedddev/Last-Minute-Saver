@@ -356,14 +356,14 @@ export default function Settings() {
           </Section>
 
           {/* ── Preferences ── */}
-          <Section icon={RiShieldLine} title="Preferences" accent="#34d399" delay={0.16}>
+          {/* <Section icon={RiShieldLine} title="Preferences" accent="#34d399" delay={0.16}>
             <Toggle value={prefs.dark_mode}      onChange={(v) => savePrefs("dark_mode", v)}      accent="#7c3aed" label="Dark Mode"        sub="Use dark theme across the app" />
             <Toggle value={prefs.notifications}  onChange={(v) => savePrefs("notifications", v)}  accent="#60a5fa" label="Notifications"     sub="Receive task reminders and alerts" />
             <Toggle value={prefs.ai_suggestions} onChange={(v) => savePrefs("ai_suggestions", v)} accent="#a78bfa" label="AI Suggestions"    sub="Let Athena suggest tasks and priorities" />
             <Toggle value={prefs.auto_scheduling} onChange={(v) => savePrefs("auto_scheduling", v)} accent="#34d399" label="Auto Scheduling"  sub="Automatically schedule tasks with AI" />
             {/* Remove last border */}
-            <div style={{ borderBottom: "none" }} />
-          </Section>
+            {/* <div style={{ borderBottom: "none" }} />
+          </Section> */} 
 
           {/* ── Danger Zone ── */}
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24, duration: 0.42 }}
