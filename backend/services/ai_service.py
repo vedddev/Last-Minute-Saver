@@ -2,7 +2,6 @@ from ai.planner import generate_plan
 from extensions import db
 from models.task import Task
 from ai.scheduler import schedule_tasks
-from models.task import Task
 from ai.analyzer import analyze_tasks
 
 
@@ -52,66 +51,34 @@ class AIService:
     @staticmethod
     def create_schedule(user_id, slots):
 
-        tasks = Task.query.filter_by(
-            user_id=user_id,
-            status="Pending"
-        ).all()
-
-        task_data = []
-
-        for t in tasks:
-
-            task_data.append({
-
-                "title": t.title,
-
-                "deadline": t.deadline,
-
-                "estimated_time": t.estimated_time,
-
-                "priority": t.priority
-
-            })
-
-        result = schedule_tasks(
-            task_data,
-            slots
-        )
-
-        return {
-
-            "success": True,
-
-            "schedule": result
-
-        }, 200
-    
-    @staticmethod
-    def analyze(user_id):
+        print("Received slots:", slots)
 
         tasks = Task.query.filter_by(
             user_id=int(user_id),
             status="Pending"
         ).all()
 
-        print("=" * 50)
-        print("Logged in user:", user_id)
-        print("Tasks found:", len(tasks))
+        print("Tasks:", len(tasks))
+
+        task_data = []
 
         for t in tasks:
-            print(
-                f"ID={t.id}, Title={t.title}, User={t.user_id}, "
-                f"Deadline={t.deadline}, Status={t.status}"
-            )
+            task_data.append({
+                "title": t.title,
+                "deadline": t.deadline,
+                "estimated_time": t.estimated_time,
+                "priority": t.priority
+            })
 
-        print("=" * 50)
+        print(task_data)
 
-        result = analyze_tasks(tasks)
+        result = schedule_tasks(task_data, slots)
 
         return {
             "success": True,
-            "analysis": result
+            "schedule": result
         }, 200
+        
     @staticmethod
     def coach(user_id):
 
@@ -179,4 +146,21 @@ class AIService:
         return {
             "success": True,
             "dashboard": result
+        }, 200
+        
+    @staticmethod
+    def analyze(user_id):
+
+        from ai.analyzer import analyze_tasks
+
+        tasks = Task.query.filter_by(
+            user_id=int(user_id),
+            status="Pending"
+        ).all()
+
+        result = analyze_tasks(tasks)
+
+        return {
+            "success": True,
+            "analysis": result
         }, 200

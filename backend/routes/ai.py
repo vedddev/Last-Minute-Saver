@@ -33,7 +33,15 @@ def schedule():
 
     user_id = get_jwt_identity()
 
-    slots = request.json.get("available_hours")
+    data = request.get_json()
+
+    print("="*50)
+    print("Incoming JSON:", data)
+    print("User:", user_id)
+
+    slots = data.get("available_hours")
+
+    print("Slots:", slots)
 
     response, status = AIService.create_schedule(
         user_id,
