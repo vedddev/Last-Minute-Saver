@@ -242,7 +242,7 @@ export default function Settings() {
   const saveProfile = async () => {
     setProfileLoading(true);
     try {
-      await api.put("/user/profile", profile);
+      await api.put("/auth/profile", profile);
       showToast("Profile updated.");
     } catch (e) { showToast(e?.response?.data?.message ?? "Save failed.", "error"); }
     finally { setProfileLoading(false); }

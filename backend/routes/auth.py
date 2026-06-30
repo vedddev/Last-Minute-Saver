@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify
 from services.auth_service import AuthService
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.user import User
+from extensions import db
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -47,3 +48,22 @@ def profile():
             "email": user.email
         }
     }, 200
+
+@auth_bp.route("/profile", methods=["PUT"])
+@jwt_required()
+def update_profile():
+    current_user = get_jwt_identity()
+
+    user = User.query.get(current_user)
+
+    data = request.get_json()
+
+    user.name = data.get("name", user.name)
+    user.email = data.get("email", user.email)
+
+    db.session.commit()
+
+    return jsonify({
+        "success": True,
+        "message": "Profile updated successfully"
+    }), 200
