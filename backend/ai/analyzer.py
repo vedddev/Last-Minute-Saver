@@ -1,9 +1,8 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from collections import defaultdict
 
 
 def analyze_tasks(tasks):
-
     now = datetime.now()
 
     total_tasks = len(tasks)
@@ -19,26 +18,53 @@ def analyze_tasks(tasks):
 
     for task in tasks:
 
-        total_estimated_minutes += task.estimated_time
+        # Safe estimated time
+        estimated_minutes = task.estimated_time or 0
+        total_estimated_minutes += estimated_minutes
 
+        # Completed tasks
         if task.status and task.status.lower() == "completed":
-                completed_tasks += 1
+            completed_tasks += 1
 
-        try:
-            deadline = datetime.strptime(
-                task.deadline,
-                "%Y-%m-%d %H:%M"
-            )
+        # -----------------------------
+        # Parse deadline safely
+        # -----------------------------
+        deadline = None
 
-            hours_left = (
-                deadline - now
-            ).total_seconds() / 3600
+        if task.deadline:
 
-        except:
-            hours_left = 24
+            try:
+                # Format: 2026-06-30 18:30
+                deadline = datetime.strptime(
+                    task.deadline,
+                    "%Y-%m-%d %H:%M"
+                )
 
-        estimated_hours = task.estimated_time / 60
+            except ValueError:
 
+                try:
+                    # Format: 2026-06-30
+                    deadline = datetime.strptime(
+                        task.deadline,
+                        "%Y-%m-%d"
+                    )
+
+                except ValueError:
+                    print(f"Invalid deadline format: {task.deadline}")
+
+        # If deadline couldn't be parsed
+        if deadline is None:
+            continue
+
+        hours_left = (
+            deadline - now
+        ).total_seconds() / 3600
+
+        estimated_hours = estimated_minutes / 60
+
+        # -----------------------------
+        # Risk Prediction
+        # -----------------------------
         if hours_left <= estimated_hours:
 
             probability = 95
@@ -60,31 +86,43 @@ def analyze_tasks(tasks):
         if risk == "High":
 
             high_risk.append({
+
                 "title": task.title,
+
                 "risk": risk,
+
                 "completion_probability": 100 - probability,
+
                 "reason": "Not enough time before deadline.",
+
                 "recommendation": recommendation
+
             })
 
             total_score -= 15
 
-        # Weekly Chart
+        # -----------------------------
+        # Weekly Analytics
+        # -----------------------------
         day = deadline.strftime("%a")
         weekly[day] += 1
 
-        # Monthly Chart
-        week = deadline.strftime("Week %U")
+        # -----------------------------
+        # Monthly Analytics
+        # -----------------------------
+        week = "Week " + deadline.strftime("%U")
         monthly[week] += 1
 
+    # -----------------------------
+    # Final Statistics
+    # -----------------------------
     total_score = max(total_score, 0)
 
-    completion_rate = 0
-
-    if total_tasks:
-        completion_rate = round(
-            completed_tasks / total_tasks * 100
-        )
+    completion_rate = (
+        round((completed_tasks / total_tasks) * 100)
+        if total_tasks
+        else 0
+    )
 
     focus_hours = round(total_estimated_minutes / 60, 1)
 
@@ -97,7 +135,7 @@ def analyze_tasks(tasks):
 
     if high_risk:
         insights.append(
-            f"{len(high_risk)} tasks are at high risk."
+            f"{len(high_risk)} task(s) are at high risk."
         )
 
     if completion_rate > 80:
@@ -121,25 +159,25 @@ def analyze_tasks(tasks):
 
         "weekly": [
             {
-                "label": k,
-                "value": v
+                "label": day,
+                "value": count
             }
-            for k, v in weekly.items()
+            for day, count in weekly.items()
         ],
 
         "monthly": [
             {
-                "label": k,
-                "value": v
+                "label": week,
+                "value": count
             }
-            for k, v in monthly.items()
+            for week, count in monthly.items()
         ],
 
-        "most_productive_day":
-            max(
-                weekly,
-                key=weekly.get
-            ) if weekly else None,
+        "most_productive_day": (
+            max(weekly, key=weekly.get)
+            if weekly
+            else None
+        ),
 
         "insights": insights,
 
