@@ -254,12 +254,6 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Create a `.env` file inside the `backend` directory:
-
-```env
-GROQ_API_KEY=YOUR_GROQ_API_KEY
-JWT_SECRET_KEY=YOUR_SECRET_KEY
-```
 
 Run the backend:
 
@@ -344,6 +338,8 @@ Current work includes:
 * AI Habit Tracker
 
 ---
+# deployment 
+Project link:https://last-minute-saver-gamma.vercel.app
 
 # 👨‍💻 Author
 
