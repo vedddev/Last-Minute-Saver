@@ -6,9 +6,9 @@ The project consists of a **Flask backend** with AI capabilities and a **React (
 
 ---
 
-# 🚀 Features
+#  Features
 
-## 🔐 Authentication
+##  Authentication
 
 * User Registration
 * User Login
@@ -18,7 +18,7 @@ The project consists of a **Flask backend** with AI capabilities and a **React (
 
 ---
 
-## ✅ Task Management
+##  Task Management
 
 * Create Tasks
 * View Tasks
@@ -31,7 +31,7 @@ The project consists of a **Flask backend** with AI capabilities and a **React (
 
 ---
 
-## 🤖 AI Features
+##  AI Features
 
 ### AI Planner
 
@@ -129,7 +129,7 @@ Generates an intelligent daily dashboard including:
 
 ---
 
-# 🏗️ Tech Stack
+#  Tech Stack
 
 ## Backend
 
@@ -154,7 +154,7 @@ Generates an intelligent daily dashboard including:
 
 ---
 
-# 📂 Project Structure
+#  Project Structure
 
 ```
 Athena-ai/
@@ -194,7 +194,7 @@ Athena-ai/
 
 ---
 
-# 🔌 Backend APIs
+#  Backend APIs
 
 ## Authentication
 
@@ -229,7 +229,7 @@ Athena-ai/
 
 ---
 
-# ⚙️ Installation
+#  Installation
 
 ## Clone Repository
 
@@ -287,7 +287,7 @@ http://localhost:5173
 
 ---
 
-# 📌 Current Progress
+#  Current Progress
 
 ## ✅ Backend
 
@@ -304,7 +304,7 @@ http://localhost:5173
 
 ---
 
-## 🚧 Frontend (In Progress)
+##  Frontend (In Progress)
 
 Current work includes:
 
@@ -341,7 +341,7 @@ Current work includes:
 # deployment 
 Project link:https://last-minute-saver-gamma.vercel.app
 
-# 👨‍💻 Author
+#  Author
 
 **Vedant Shelake**
 
@@ -351,11 +351,11 @@ Passionate about Artificial Intelligence, Full Stack Development, and Building A
 
 ---
 
-# ⭐ Project Status
+# ⭐Project Status
 
-**Backend:** ✅ Complete
+**Backend:**  Complete
 
-**Frontend:** 🚧 Under Development
+**Frontend:** Complete
 
 **Overall Progress:** ~70%
 
