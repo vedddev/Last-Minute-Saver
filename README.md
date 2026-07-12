@@ -1,4 +1,4 @@
-# Athena AI – Intelligent Productivity Assistant
+#  Athena AI – Intelligent Productivity Assistant
 
 Athena AI is a full-stack AI-powered productivity assistant that helps users manage tasks, generate AI-based plans, schedule work intelligently, analyze productivity, and receive personalized coaching.
 
@@ -9,7 +9,7 @@ The project consists of a **Flask backend** with AI capabilities and a **React (
 #  Features
 
 ##  Authentication
-
+ 
 * User Registration
 * User Login
 * JWT Authentication
